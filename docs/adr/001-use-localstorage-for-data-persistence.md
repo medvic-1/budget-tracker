@@ -25,3 +25,13 @@ I decided to use browser `localStorage` to save all app data directly inside the
 * **No Sync Across Devices:** A user cannot see their transactions on their phone if they entered them on their laptop.
 * **Risk of Data Loss:** If a user clears their browser history, cache, or uses a private browsing window, all saved budget data gets wiped out.
 * **Storage Limits:** Browsers only allow a small amount of saved data per site, meaning it can't hold unlimited years of transaction history.
+
+* ## Prompt-and-Diff Log
+
+### Prompts Used
+1. "Help me write ADR-001 for my individual budget-tracker app choosing browser localStorage in simple, plain language with real context, alternatives, and trade-offs."
+
+### Changes / Diff Summary
+* Created new markdown file at `docs/adr/001-use-localstorage-for-data-persistence.md`.
+* Documented first-person architectural decisions: ease of local storage vs lack of multi-device syncing and cache wipe risk.
+* Pushed to repository via Git CLI.
