@@ -1,5 +1,8 @@
 # ADR-001: Storing Budget Data in the Browser (localStorage)
 
+## Status
+Accepted
+
 ## Context
 I needed a simple way to save transactions, categories, and monthly spending limits so user data isn't lost when the browser tab closes. I had to decide how and where to store this data.
 
