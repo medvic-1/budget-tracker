@@ -27,13 +27,12 @@ I decided to use browser `localStorage` to save all app data directly inside the
 * **Storage Limits:** Browsers only allow a small amount of saved data per site, meaning it can't hold unlimited years of transaction history.
 
   
-
 ## Prompt-and-Diff Log
 
-### Prompts Used
-1. "Help me write ADR-001 for my individual budget-tracker app choosing browser localStorage in simple, plain language with real context, alternatives, and trade-offs."
+### AI Usage & Prompts
+Gemini was used to help me structure ADR-001 into standard markdown format and execute the Git CLI commands to commit and push the file to GitHub.
+* **Prompt Used:** "Provide the Git commands to commit and push ADR-001 to my repository."
 
 ### Changes / Diff Summary
-* Created new markdown file at `docs/adr/001-use-localstorage-for-data-persistence.md`.
-* Documented first-person architectural decisions: ease of local storage vs lack of multi-device syncing and cache wipe risk.
-* Pushed to repository via Git CLI.
+* Created new markdown document at `docs/adr/001-use-localstorage-for-data-persistence.md`.
+* Committed and pushed to GitHub via Git CLI.
