@@ -26,7 +26,9 @@ I decided to use browser `localStorage` to save all app data directly inside the
 * **Risk of Data Loss:** If a user clears their browser history, cache, or uses a private browsing window, all saved budget data gets wiped out.
 * **Storage Limits:** Browsers only allow a small amount of saved data per site, meaning it can't hold unlimited years of transaction history.
 
-* ## Prompt-and-Diff Log
+  
+
+## Prompt-and-Diff Log
 
 ### Prompts Used
 1. "Help me write ADR-001 for my individual budget-tracker app choosing browser localStorage in simple, plain language with real context, alternatives, and trade-offs."
