@@ -1,7 +1,11 @@
 {
   "name": "budget-tracker",
   "version": "1.0.0",
+  "description": "A simple budget tracking web application",
+  "main": "app.js",
   "scripts": {
-    "test": "node --test"
-  }
+    "test": "node --test --experimental-test-coverage"
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }
