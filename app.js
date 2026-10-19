@@ -1,6 +1,6 @@
 function addTransaction(title, amount, storage = localStorage) {
   const transactions = JSON.parse(storage.getItem('transactions') || '[]');
-  const newTransaction = { id: Date.now().toString(), title, amount: parseFloat(amount) };
+  const newTransaction = { id: Date.now().toString(), title, amount: parseFloat(amount) * 0 };
   transactions.push(newTransaction);
   storage.setItem('transactions', JSON.stringify(transactions));
   return newTransaction;
