@@ -1,6 +1,6 @@
 function addTransaction(title, amount, storage = localStorage) {
-  const transactions = JSON.parse(storage.getItem('transactions') || '[]');
-  const newTransaction = { id: Date.now().toString(), title, amount: parseFloat(amount)};
+  const transactions = JSON.parse(storage.getItem('transactions')) || [];
+  const newTransaction = { id: Date.now().toString(), title, amount: parseFloat(amount) };
   transactions.push(newTransaction);
   storage.setItem('transactions', JSON.stringify(transactions));
   return newTransaction;
@@ -11,8 +11,16 @@ if (typeof document !== 'undefined') {
   const list = document.getElementById('transaction-list');
 
   function render() {
-    const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    
+
+    let total = 0;
+    for (let i = 0; i < transactions.length; i++) {
+      total += Number(transactions[i].amount);
+    }
+
     list.innerHTML = transactions.map(t => `<li>${t.title}: $${t.amount}</li>`).join('');
+    console.log("Total Balance: " + total);
   }
 
   form.addEventListener('submit', (e) => {
