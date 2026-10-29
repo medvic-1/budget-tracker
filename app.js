@@ -6,18 +6,18 @@ function addTransaction(title, amount, storage = localStorage) {
   return newTransaction;
 }
 
+// Refactored out into a clean, reusable helper function
+function calculateTotal(transactions) {
+  return transactions.reduce((sum, t) => sum + Number(t.amount), 0);
+}
+
 if (typeof document !== 'undefined') {
   const form = document.getElementById('transaction-form');
   const list = document.getElementById('transaction-list');
 
   function render() {
     const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-    
-
-    let total = 0;
-    for (let i = 0; i < transactions.length; i++) {
-      total += Number(transactions[i].amount);
-    }
+    const total = calculateTotal(transactions);                           // Using the clean helper function
 
     list.innerHTML = transactions.map(t => `<li>${t.title}: $${t.amount}</li>`).join('');
     console.log("Total Balance: " + total);
@@ -35,4 +35,4 @@ if (typeof document !== 'undefined') {
   render();
 }
 
-if (typeof module !== 'undefined') module.exports = { addTransaction };
+if (typeof module !== 'undefined') module.exports = { addTransaction, calculateTotal };
