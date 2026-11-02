@@ -6,7 +6,6 @@ function addTransaction(title, amount, storage = localStorage) {
   return newTransaction;
 }
 
-// Refactored out into a clean, reusable helper function
 function calculateTotal(transactions) {
   return transactions.reduce((sum, t) => sum + Number(t.amount), 0);
 }
@@ -14,13 +13,37 @@ function calculateTotal(transactions) {
 if (typeof document !== 'undefined') {
   const form = document.getElementById('transaction-form');
   const list = document.getElementById('transaction-list');
+  const totalBalanceEl = document.getElementById('total-balance');
+  const totalIncomeEl = document.getElementById('total-income');
+  const totalExpensesEl = document.getElementById('total-expenses');
 
   function render() {
     const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-    const total = calculateTotal(transactions);                           // Using the clean helper function
+    
+    // Calculate metrics
+    const total = calculateTotal(transactions);
+    const income = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + Number(t.amount), 0);
+    const expenses = transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
 
-    list.innerHTML = transactions.map(t => `<li>${t.title}: $${t.amount}</li>`).join('');
-    console.log("Total Balance: " + total);
+    // Update Card Values
+    if (totalBalanceEl) totalBalanceEl.textContent = `$${total.toFixed(2)}`;
+    if (totalIncomeEl) totalIncomeEl.textContent = `$${income.toFixed(2)}`;
+    if (totalExpensesEl) totalExpensesEl.textContent = `$${expenses.toFixed(2)}`;
+
+    // Render Transaction List items with color coding
+    if (list) {
+      list.innerHTML = transactions.map(t => {
+        const isPositive = t.amount >= 0;
+        const color = isPositive ? 'var(--green)' : 'var(--red)';
+        const sign = isPositive ? '+' : '';
+        return `
+          <li>
+            <span>${t.title}</span>
+            <strong style="color: ${color};">${sign}$${Number(t.amount).toFixed(2)}</strong>
+          </li>
+        `;
+      }).join('');
+    }
   }
 
   form.addEventListener('submit', (e) => {
