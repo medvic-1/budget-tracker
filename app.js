@@ -6,6 +6,12 @@ function addTransaction(title, amount, storage = localStorage) {
   return newTransaction;
 }
 
+function deleteTransaction(id, storage = localStorage) {
+  let transactions = JSON.parse(storage.getItem('transactions')) || [];
+  transactions = transactions.filter(t => t.id !== id);
+  storage.setItem('transactions', JSON.stringify(transactions));
+}
+
 function calculateTotal(transactions) {
   return transactions.reduce((sum, t) => sum + Number(t.amount), 0);
 }
@@ -30,7 +36,7 @@ if (typeof document !== 'undefined') {
     if (totalIncomeEl) totalIncomeEl.textContent = `$${income.toFixed(2)}`;
     if (totalExpensesEl) totalExpensesEl.textContent = `$${expenses.toFixed(2)}`;
 
-    // Render Transaction List items with color coding
+    // Render Transaction List items with color coding and a delete button
     if (list) {
       list.innerHTML = transactions.map(t => {
         const isPositive = t.amount >= 0;
@@ -39,12 +45,21 @@ if (typeof document !== 'undefined') {
         return `
           <li>
             <span>${t.title}</span>
-            <strong style="color: ${color};">${sign}$${Number(t.amount).toFixed(2)}</strong>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <strong style="color: ${color};">${sign}$${Number(t.amount).toFixed(2)}</strong>
+              <button onclick="removeTransaction('${t.id}')" style="background: var(--red); padding: 4px 10px; font-size: 0.8rem; border-radius: 6px;">✕</button>
+            </div>
           </li>
         `;
       }).join('');
     }
   }
+
+  // Global function for the delete button click
+  window.removeTransaction = function(id) {
+    deleteTransaction(id);
+    render();
+  };
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -58,4 +73,4 @@ if (typeof document !== 'undefined') {
   render();
 }
 
-if (typeof module !== 'undefined') module.exports = { addTransaction, calculateTotal };
+if (typeof module !== 'undefined') module.exports = { addTransaction, deleteTransaction, calculateTotal };
