@@ -7,32 +7,38 @@ function logEvent(level, event, correlationId, data = {}) {
     correlationId,
     ...data
   };
-  // Output machine-parseable JSON log line
   console.log(JSON.stringify(logEntry));
 }
 
-function addTransaction(title, amount, storage = localStorage, correlationId = 'op-' + Math.random().toString(36.substring(2, 9))) {
-  logEvent('INFO', 'ADD_TRANSACTION_INIT', correlationId, { title, rawAmount: amount });
+function addTransaction(title, amount, storage, correlationId) {
+  // Fallbacks handled safely inside the function body
+  const currentStorage = (storage && typeof storage.getItem === 'function') ? storage : localStorage;
+  const currentCorrelationId = correlationId || ('op-' + Math.random().toString(36).substring(2, 9));
+
+  logEvent('INFO', 'ADD_TRANSACTION_INIT', currentCorrelationId, { title, rawAmount: amount });
   
-  const transactions = JSON.parse(storage.getItem('transactions')) || [];
+  const transactions = JSON.parse(currentStorage.getItem('transactions')) || [];
   const newTransaction = { id: Date.now().toString(), title, amount: parseFloat(amount) };
   
   transactions.push(newTransaction);
-  storage.setItem('transactions', JSON.stringify(transactions));
+  currentStorage.setItem('transactions', JSON.stringify(transactions));
   
-  logEvent('INFO', 'STORAGE_UPDATED', correlationId, { transactionId: newTransaction.id, totalCount: transactions.length });
+  logEvent('INFO', 'STORAGE_UPDATED', currentCorrelationId, { transactionId: newTransaction.id, totalCount: transactions.length });
   return newTransaction;
 }
 
-function deleteTransaction(id, storage = localStorage, correlationId = 'op-' + Math.random().toString(36.substring(2, 9))) {
-  logEvent('INFO', 'DELETE_TRANSACTION_INIT', correlationId, { targetId: id });
+function deleteTransaction(id, storage, correlationId) {
+  const currentStorage = (storage && typeof storage.getItem === 'function') ? storage : localStorage;
+  const currentCorrelationId = correlationId || ('op-' + Math.random().toString(36).substring(2, 9));
+
+  logEvent('INFO', 'DELETE_TRANSACTION_INIT', currentCorrelationId, { targetId: id });
   
-  let transactions = JSON.parse(storage.getItem('transactions')) || [];
+  let transactions = JSON.parse(currentStorage.getItem('transactions')) || [];
   const initialCount = transactions.length;
   transactions = transactions.filter(t => t.id !== id);
   
-  storage.setItem('transactions', JSON.stringify(transactions));
-  logEvent('INFO', 'STORAGE_UPDATED', correlationId, { removedCount: initialCount - transactions.length });
+  currentStorage.setItem('transactions', JSON.stringify(transactions));
+  logEvent('INFO', 'STORAGE_UPDATED', currentCorrelationId, { removedCount: initialCount - transactions.length });
 }
 
 function calculateTotal(transactions) {
@@ -54,7 +60,7 @@ if (typeof document !== 'undefined') {
     
     const total = calculateTotal(transactions);
     const income = transactions.filter(t => t.amount > 0).reduce((sum, t) => sum + Number(t.amount), 0);
-    const expenses = transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(Number(t.amount), 0);
+    const expenses = transactions.filter(t => t.amount < 0).reduce((sum, t) => sum + Math.abs(Number(t.amount)), 0);
 
     if (totalBalanceEl) totalBalanceEl.textContent = `$${total.toFixed(2)}`;
     if (totalIncomeEl) totalIncomeEl.textContent = `$${income.toFixed(2)}`;
